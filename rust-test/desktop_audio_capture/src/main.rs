@@ -154,10 +154,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
              else { "Auto-fallback" }
     );
     println!("Target      : ID {} ({})", target_id, target_sink_name);
+    println!("Output File : {}", &output_file_name);
     println!("==========================================\n");
 
     // 4. Initialize the Sun Audio (.au) file wrapper NOW that we know the channels
-    let file = File::create(output_file_name)?;
+    let file = File::create(&output_file_name)?;
     let mut file_writer = BufWriter::new(file);
 
     let magic_bytes: u32 = 0x2e736e64;
@@ -359,7 +360,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("==========================================");
     println!("File State   : Closed and Written successfully.");
     println!("Total Frames : {} audio frames saved", final_sample_count);
-    println!("Output File  : desktop_capture.au");
+    println!("Output File  : {}", &output_file_name);
     println!("==========================================\n");
 
     Ok(())
