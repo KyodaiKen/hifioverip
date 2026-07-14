@@ -14,6 +14,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut config_bit_depth: u32 = 24;
     let mut config_auto_channels: bool = true;
     let mut config_fallback_channels: u32 = 2;
+    let mut output_file_name: String = "desktop_capture.au".to_string();
 
     let mut args = std::env::args().skip(1);
     while let Some(arg) = args.next() {
@@ -43,7 +44,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 println!("  -s <rate>    Sample rate (default: 48000)");
                 println!("  -b <bits>    Bit depth: 16, 24, 32 (default: 24)");
                 println!("  -c <count>   Channels: 'auto' or number (default: auto)");
+                println!("  -o <filenm>  Output file name");
                 return Ok(());
+            }
+            "-o" => {
+                if let Some(val) = args.next() {
+                    output_file_name = val.as_str().to_owned();
+                    println!("Output file: {}", output_file_name);
+                }
             }
             _ => {
                 println!("Unknown argument: {}. Use -h for help.", arg);
@@ -149,7 +157,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("==========================================\n");
 
     // 4. Initialize the Sun Audio (.au) file wrapper NOW that we know the channels
-    let file = File::create("desktop_capture.au")?;
+    let file = File::create(output_file_name)?;
     let mut file_writer = BufWriter::new(file);
 
     let magic_bytes: u32 = 0x2e736e64;
